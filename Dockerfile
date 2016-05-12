@@ -36,6 +36,14 @@ VOLUME /var/lib/jenkins
 RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
+# get plugins.sh tool from official Jenkins repo
+# this allows plugin installation
+ENV JENKINS_UC https://updates.jenkins.io
+
+RUN curl -o /usr/local/bin/plugins.sh \
+  https://raw.githubusercontent.com/jenkinsci/docker/75b17c48494d4987aa5c2ce7ad02820fda932ce4/plugins.sh && \
+  chmod +x /usr/local/bin/plugins.sh
+
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 8080
