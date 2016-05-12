@@ -41,6 +41,13 @@ RUN easy_install syslog-stdout supervisor-stdout
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
+# copy files onto the filesystem
+COPY files/ /
+RUN chmod +x /docker-entrypoint /usr/local/bin/*
+
 EXPOSE 8080
+
+# set the entrypoint
+ENTRYPOINT ["/docker-entrypoint"]
 
 CMD ["/usr/bin/supervisord"]
