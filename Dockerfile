@@ -39,6 +39,14 @@ RUN chmod +x /usr/local/bin/docker-compose
 # Install syslog-stdout utilities
 RUN easy_install syslog-stdout supervisor-stdout
 
+# get plugins.sh tool from official Jenkins repo
+# this allows plugin installation
+ENV JENKINS_UC https://updates.jenkins.io
+
+RUN curl -o /usr/local/bin/plugins.sh \
+  https://raw.githubusercontent.com/jenkinsci/docker/75b17c48494d4987aa5c2ce7ad02820fda932ce4/plugins.sh && \
+  chmod +x /usr/local/bin/plugins.sh
+
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # copy files onto the filesystem
