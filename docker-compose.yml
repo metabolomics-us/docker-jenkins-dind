@@ -1,7 +1,7 @@
 version: '2'
 services:
   jenkins:
-    build: .
+    image: roberto/docker-jenkins-dind
     privileged: true
     restart: always
     ports:
