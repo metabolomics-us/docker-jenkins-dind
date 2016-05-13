@@ -12,7 +12,6 @@ services:
     volumes:
       - jenkins-data:/var/lib/jenkins
       - privateregistry_registry-certs:/certs
-      - ./src:/src
     external_links:
       - privateregistry_registry_1:registry
 
