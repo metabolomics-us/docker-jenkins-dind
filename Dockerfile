@@ -21,6 +21,14 @@ RUN usermod -a -G docker jenkins
 ENV JENKINS_HOME /var/lib/jenkins
 VOLUME /var/lib/jenkins
 
+# get plugins.sh tool from official Jenkins repo
+# this allows plugin installation
+ENV JENKINS_UC https://updates.jenkins.io
+
+RUN curl -o /usr/local/bin/plugins.sh \
+  https://raw.githubusercontent.com/jenkinsci/docker/75b17c48494d4987aa5c2ce7ad02820fda932ce4/plugins.sh && \
+  chmod +x /usr/local/bin/plugins.sh
+
 # Install Docker from Docker Inc. repositories.
 RUN curl -sSL https://get.docker.com/ | sh
 
@@ -39,14 +47,6 @@ RUN chmod +x /usr/local/bin/wrapdocker
 
 # Define additional metadata for our image.
 VOLUME /var/lib/docker
-
-# get plugins.sh tool from official Jenkins repo
-# this allows plugin installation
-ENV JENKINS_UC https://updates.jenkins.io
-
-RUN curl -o /usr/local/bin/plugins.sh \
-  https://raw.githubusercontent.com/jenkinsci/docker/75b17c48494d4987aa5c2ce7ad02820fda932ce4/plugins.sh && \
-  chmod +x /usr/local/bin/plugins.sh
 
 ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
