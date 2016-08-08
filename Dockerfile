@@ -1,17 +1,23 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
+MAINTAINER Sajjan Singh Mehta <sajjan.s.mehta@gmail.com>
 
-MAINTAINER Decheng Zhang <killercentury@gmail.com>
+# References:
+#   https://hub.docker.com/_/docker/
+#   https://hub.docker.com/r/roberto/docker-jenkins-dind/
+#   https://hub.docker.com/r/jpetazzo/dind/
 
 # Let's start with some basic stuff.
-RUN apt-get update -qq && apt-get install -qqy \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    lxc \
-    iptables
+RUN apt-get update -qq && \
+	apt-get install -qqy apt-transport-https ca-certificates curl wget lxc iptables vim
+
+# Install JDK and Maven
+RUN apt-get install -qqy openjdk-8-jdk maven
+
+ADD includes/maven/settings.xml /usr/share/maven/config/settings.xml
 
 # Install syslog-stdout
-RUN easy_install syslog-stdout supervisor-stdout
+RUN apt-get -qqy install python-setuptools && \
+	easy_install syslog-stdout supervisor-stdout
 
 # Install Docker from Docker Inc. repositories.
 RUN curl -sSL https://get.docker.com/ | sh
@@ -22,11 +28,13 @@ ENV DOCKER_COMPOSE_VERSION 1.7.1
 RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
-# Install the wrapper script from https://raw.githubusercontent.com/docker/docker/master/hack/dind.
-ADD ./dind /usr/local/bin/dind
-RUN chmod +x /usr/local/bin/dind
+# Install the wrapper script
+ENV DIND_COMMIT 3b5fac462d21ca164b3778647420016315289034
 
-ADD ./wrapdocker /usr/local/bin/wrapdocker
+RUN wget "https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind" -O /usr/local/bin/dind && \
+	chmod +x /usr/local/bin/dind
+
+ADD includes/sh/wrapdocker /usr/local/bin/wrapdocker
 RUN chmod +x /usr/local/bin/wrapdocker
 
 # Install Jenkins
@@ -37,26 +45,40 @@ RUN usermod -a -G docker jenkins
 ENV JENKINS_HOME /var/lib/jenkins
 VOLUME /var/lib/jenkins
 
-# get plugins.sh tool from official Jenkins repo
-# this allows plugin installation
+# Get plugins.sh tool from official Jenkins repo
 ENV JENKINS_UC https://updates.jenkins.io
 
 RUN curl -o /usr/local/bin/plugins.sh \
   https://raw.githubusercontent.com/jenkinsci/docker/75b17c48494d4987aa5c2ce7ad02820fda932ce4/plugins.sh && \
   chmod +x /usr/local/bin/plugins.sh
 
-# Define additional metadata for our image.
+# Install Compass
+RUN apt-get update -qq && \
+        apt-get install -qqy ruby-compass
+
+# Configure bower to allow running as root
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
+# Configure the language and encoding
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+# Define our volume mount point
 VOLUME /var/lib/docker
 
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Add additional scripts and configurations
+ADD includes/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD includes/sh/docker-entrypoint /
+ADD includes/sh/registry-certificate /usr/local/bin/
+RUN chmod +x docker-entrypoint /usr/local/bin/registry-certificate
 
-# copy files onto the filesystem
-COPY files/ /
-RUN chmod +x /docker-entrypoint /usr/local/bin/*
-
+# Expose port 8080
 EXPOSE 8080
 
-# set the entrypoint
+# Define our entrypoint script
 ENTRYPOINT ["/docker-entrypoint"]
 
+# Start the supervisor daemon
 CMD ["/usr/bin/supervisord"]
