@@ -59,6 +59,14 @@ RUN apt-get update -qq && \
 # Configure bower to allow running as root
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
+# Install OpenShift CLI
+ADD https://github.com/openshift/origin/releases/download/v1.1.0.1/openshift-origin-client-tools-v1.1.0.1-bf56e23-linux-64bit.tar.gz /root
+RUN cd /root && \
+	tar xvf openshift-origin-client-tools-v1.1.0.1-bf56e23-linux-64bit.tar.gz && \
+	mv openshift-origin-client-tools-v1.1.0.1-bf56e23-linux-64bit/oc /usr/local/bin && \
+	rm openshift-origin-client-tools-v1.1.0.1-bf56e23-linux-64bit.tar.gz && \
+	rm -rf openshift-origin-client-tools-v1.1.0.1-bf56e23-linux-64bit
+
 # Configure the language and encoding
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
