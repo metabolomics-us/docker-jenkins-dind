@@ -23,7 +23,7 @@ RUN apt-get -qqy install python-setuptools && \
 RUN curl -sSL https://get.docker.com/ | sh
 
 # Install Docker Compose
-ENV DOCKER_COMPOSE_VERSION 1.7.1
+ENV DOCKER_COMPOSE_VERSION 1.11.1
 
 RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
