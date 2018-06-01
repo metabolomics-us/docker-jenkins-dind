@@ -1,3 +1,4 @@
 {
-    "insecure-registries": ["eros.fiehnlab.ucdavis.edu"]
+    "insecure-registries": ["eros.fiehnlab.ucdavis.edu"],
+    "disable-legacy-registry": false
 }

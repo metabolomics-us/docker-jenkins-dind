@@ -8,7 +8,7 @@ MAINTAINER Sajjan Singh Mehta <sajjan.s.mehta@gmail.com>
 
 # Let's start with some basic stuff.
 RUN apt-get update -qq && \
-	apt-get install -qqy apt-transport-https ca-certificates curl wget lxc iptables vim
+	apt-get install -qqy apt-transport-https ca-certificates curl wget lxc iptables vim software-properties-common
 
 # Install JDK and Maven
 RUN apt-get install -qqy openjdk-8-jdk maven
@@ -17,14 +17,16 @@ ADD includes/maven/settings.xml /usr/share/maven/config/settings.xml
 
 # Install syslog-stdout
 RUN apt-get -qqy install python-setuptools && \
-	easy_install syslog-stdout supervisor-stdout
+    easy_install syslog-stdout supervisor-stdout
 
 # Install Docker from Docker Inc. repositories.
-RUN curl -sSL https://get.docker.com/ | sh
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+RUN apt-get update && \
+    apt-get install -qqy docker-ce
 
 # Install Docker Compose
-ENV DOCKER_COMPOSE_VERSION 1.11.1
-
+ENV DOCKER_COMPOSE_VERSION 1.17.0
 RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 RUN chmod +x /usr/local/bin/docker-compose
 
@@ -68,6 +70,7 @@ RUN cd /root && \
 	rm -rf openshift-origin-client-tools-v1.1.0.1-bf56e23-linux-64bit
 
 # Configure the language and encoding
+RUN apt-get install -y locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
