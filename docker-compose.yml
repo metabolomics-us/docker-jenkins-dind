@@ -1,0 +1,41 @@
+version: "3.3"
+
+volumes:
+  nfsMount:
+    driver: local
+    driver_opts:
+      type: nfs
+      o: "addr=nas1.nfs.fiehnlab.ucdavis.edu,rw"
+      device: ":/mnt/test/jenkins"
+
+configs:
+  maven_config:
+    file: ./maven/settings.xml
+
+services:
+  jenkins:
+    image: eros.fiehnlab.ucdavis.edu/jenkins-dind
+    privileged: true
+    volumes:
+      - "nfsMount:/var/lib/jenkins"
+    configs:
+      - source: maven_config
+        target: /usr/share/maven/config/settings.xml
+    deploy:
+      replicas: 5
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+      labels:
+        - com.df.notify=true
+        - com.df.distribute=true
+        - com.df.serviceDomain=jenkins.fiehnlab.ucdavis.edu
+        - com.df.port=8080
+
+networks:
+  default:
+    external: false
+  proxy:
+    external: true
