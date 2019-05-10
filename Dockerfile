@@ -84,7 +84,6 @@ ADD includes/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.con
 ADD includes/sh/docker-entrypoint /
 ADD includes/sh/registry-certificate /usr/local/bin/
 RUN chmod +x docker-entrypoint /usr/local/bin/registry-certificate
-ADD includes/docker/daemon.json /etc/docker/
 
 # Expose port 8080
 EXPOSE 8080

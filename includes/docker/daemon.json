@@ -1,4 +1,0 @@
-{
-    "insecure-registries": ["eros.fiehnlab.ucdavis.edu"],
-    "disable-legacy-registry": false
-}

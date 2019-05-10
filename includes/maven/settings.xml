@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <servers>
+        <server>
+            <id>releases</id>
+            <username>wohlgemuth</username>
+            <password>changeme</password>
+        </server>
+        <server>
+            <id>snapshots</id>
+            <username>wohlgemuth</username>
+            <password>changeme</password>
+        </server>
+    </servers>
+
+    <mirrors>
+        <mirror>
+            <!--This sends everything else to /public -->
+            <id>Fiehnlab Nexus Repository</id>
+            <mirrorOf>*</mirrorOf>
+            <url>http://gose.fiehnlab.ucdavis.edu:55000/content/groups/public</url>
+        </mirror>
+    </mirrors>
+</settings>
