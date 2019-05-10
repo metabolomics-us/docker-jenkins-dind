@@ -13,8 +13,6 @@ RUN apt-get update -qq && \
 # Install JDK and Maven
 RUN apt-get install -qqy openjdk-8-jdk maven
 
-ADD includes/maven/settings.xml /usr/share/maven/config/settings.xml
-
 # Install syslog-stdout
 RUN apt-get -qqy install python-setuptools && \
     easy_install syslog-stdout supervisor-stdout
