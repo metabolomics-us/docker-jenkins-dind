@@ -76,6 +76,7 @@ ENV LC_ALL en_US.UTF-8
 
 # Define our volume mount point
 VOLUME /var/lib/docker
+VOLUME /usr/share/maven/config
 
 # Add additional scripts and configurations
 ADD includes/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
