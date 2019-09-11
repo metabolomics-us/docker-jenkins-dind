@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# This script is run by the root user in order to have the privileges to change
+# ownership of the jobs directory. The jobs directory is mounted as a named
+# volume and otherwise is owned by the root user so that the jenkins user
+# cannot write into it.
+#
+# "gosu" finally steps down from the root user to the jenkins user since we
+# do not want to run the Jenkins process with root privileges.
+#
+# /usr/local/bin/jenkins.sh is the original entrypoint script from the base image.
+
+chown -R jenkins:jenkins $JENKINS_HOME

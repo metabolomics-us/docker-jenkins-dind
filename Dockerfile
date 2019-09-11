@@ -82,7 +82,8 @@ VOLUME /usr/share/maven/config
 ADD includes/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD includes/sh/docker-entrypoint /
 ADD includes/sh/registry-certificate /usr/local/bin/
-RUN chmod +x docker-entrypoint /usr/local/bin/registry-certificate
+ADD includes/sh/fix_volume_ownership /
+RUN chmod +x /docker-entrypoint /usr/local/bin/registry-certificate /fix_volume_ownership
 
 # Expose port 8080
 EXPOSE 8080
