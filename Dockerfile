@@ -71,6 +71,7 @@ VOLUME /var/lib/docker
 VOLUME /usr/share/maven/config
 
 # Add additional scripts and configurations
+ADD includes/maven/settings.xml /usr/share/maven/config/
 ADD includes/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD includes/sh/docker-entrypoint /
 ADD includes/sh/registry-certificate /usr/local/bin/
