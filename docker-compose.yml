@@ -16,18 +16,8 @@ services:
       - "nfsMount:/var/lib/jenkins"
     ports:
       - 80:8080
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure
-      labels:
-        - com.df.notify=true
-        - com.df.distribute=true
-        - com.df.serviceDomain=jenkins.fiehnlab.ucdavis.edu
-        - com.df.port=8080
+    environment:
+      TZ: "America/Los_Angeles"
 
 networks:
   default:
