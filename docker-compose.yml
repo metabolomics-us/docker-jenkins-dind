@@ -8,19 +8,12 @@ volumes:
       o: "addr=nas1.nfs.fiehnlab.ucdavis.edu,rw"
       device: ":/mnt/test/jenkins"
 
-configs:
-  maven_config:
-    file: ./maven/settings.xml
-
 services:
   jenkins:
     image: eros.fiehnlab.ucdavis.edu/jenkins-dind
     privileged: true
     volumes:
       - "nfsMount:/var/lib/jenkins"
-    configs:
-      - source: maven_config
-        target: /usr/share/maven/config/settings.xml
     deploy:
       replicas: 1
       update_config:
