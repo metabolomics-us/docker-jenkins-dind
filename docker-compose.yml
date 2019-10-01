@@ -5,8 +5,8 @@ volumes:
     driver: local
     driver_opts:
       type: nfs
-      o: "addr=nas1.nfs.fiehnlab.ucdavis.edu,rw"
-      device: ":/mnt/test/jenkins"
+      o: "addr=nas1.nas.fiehnlab.ucdavis.edu,rw"
+      device: ":/mnt/prod/jenkins"
 
 services:
   jenkins:
@@ -14,6 +14,8 @@ services:
     privileged: true
     volumes:
       - "nfsMount:/var/lib/jenkins"
+    ports:
+      - 80:8080
     deploy:
       replicas: 1
       update_config:
