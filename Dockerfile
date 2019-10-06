@@ -56,6 +56,11 @@ RUN curl -o /usr/local/bin/plugins.sh \
 RUN apt-get update -qq && \
         apt-get install -qqy ruby-compass
 
+# Install npm
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g serverless serverless-python-requirements
+
 # Configure bower to allow running as root
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
