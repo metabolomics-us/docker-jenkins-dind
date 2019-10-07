@@ -14,7 +14,8 @@ RUN apt-get update -qq && \
 RUN apt-get install -qqy openjdk-8-jdk maven
 
 # Install syslog-stdout
-RUN apt-get -qqy install python-setuptools && \
+RUN apt-get -qqy install python-setuptools python3-pip && \
+	pip3 install --upgrade pip && \
     easy_install syslog-stdout supervisor-stdout
 
 # Install Docker from Docker Inc. repositories.
@@ -54,12 +55,15 @@ RUN curl -o /usr/local/bin/plugins.sh \
 
 # Install Compass
 RUN apt-get update -qq && \
-        apt-get install -qqy ruby-compass
+    apt-get install -qqy ruby-compass
 
 # Install npm
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g serverless serverless-python-requirements
+
+# Install awscli
+RUN pip install awscli
 
 # Configure bower to allow running as root
 RUN echo '{ "allow_root": true }' > /root/.bowerrc
